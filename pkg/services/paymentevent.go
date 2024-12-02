@@ -10,6 +10,8 @@ import (
 	"github.com/ratheeshkumar25/opti_cut_notification/pkg/utilis"
 )
 
+var emailStore = make(map[string]string)
+
 // SubscribeAndConsumePaymentEvents implements interfaces.NotificationServiceInter.
 func (n *NotificationService) SubscribeAndConsumePaymentEvents() error {
 	log.Println("waiting for the event")
@@ -28,6 +30,7 @@ func (n *NotificationService) SubscribeAndConsumePaymentEvents() error {
 			continue
 		}
 		fmt.Println("receiving produce", paymentEvent)
+		emailStore[paymentEvent.PaymentID] = paymentEvent.Email
 
 		err = utilis.SendNotificationToEmail(paymentEvent, "Payment Notification", fmt.Sprintf("Payment received: %.2f", paymentEvent.Amount))
 
