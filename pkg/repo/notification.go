@@ -12,7 +12,7 @@ func (m *MongoRepository) NotificationStore(notify models.Notification) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := m.Collection.InsertOne(ctx, notify)
+	_, err := m.NotificationCollection.InsertOne(ctx, notify)
 	if err != nil {
 		return err
 	}

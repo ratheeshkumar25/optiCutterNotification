@@ -13,6 +13,6 @@ type MongoRepository struct {
 func NewMongoRepository(mongo *mongo.Database) inter.NotificationInter {
 	return &MongoRepository{
 		Collection:             mongo.Collection("myNotification"),
-		NotificationCollection: mongo.Collection("myNotification"),
+		NotificationCollection: mongo.Collection("kafkaNotification"),
 	}
 }
