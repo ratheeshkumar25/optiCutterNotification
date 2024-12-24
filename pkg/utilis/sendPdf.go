@@ -9,8 +9,6 @@ import (
 )
 
 // Send email function using GoMail
-
-// Send email function using GoMail
 func SendNotificationToEmail(event models.PaymentEvent, subject, body string, cuttingResultID uint, cuttingDetails string, components []models.ComponentPayload) error {
 	filePath := "combined_invoice.pdf" // Update to correct filename
 
