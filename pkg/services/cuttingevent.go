@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"strconv"
 	"time"
 
 	"github.com/ratheeshkumar25/opti_cut_notification/pkg/models"
@@ -16,23 +18,25 @@ func (n *NotificationService) SubScribeAnsConsumeCuttingEvents() error {
 		// cuttingConsumer is similar to paymentConsumer
 		msg, err := n.cuttingResultconsumer.ReadMessage(context.Background())
 		if err != nil {
-			fmt.Println("Consumer error", err)
+			log.Println("Consumer error", err)
 			continue
 		} else {
-			fmt.Println("Message Received", msg)
+			log.Println("Message Received", msg)
 		}
 
 		var cuttingEvent models.CuttingResultEvent
 		if err := json.Unmarshal(msg.Value, &cuttingEvent); err != nil {
-			fmt.Printf("Failed to unmarshal cutting event message: %v\n", err)
+			log.Printf("Failed to unmarshal cutting event message: %v\n", err)
 			continue
 		}
-		fmt.Printf("Raw Message as String: %s\n", string(msg.Value))
-		fmt.Printf("Received Cutting Event: %v\n", cuttingEvent)
+		log.Printf("Raw Message as String: %s\n", string(msg.Value))
+		log.Printf("Received Cutting Event: %v\n", cuttingEvent)
+
+		cuttingResultIDStr := strconv.FormatUint(uint64(cuttingEvent.CuttingResultID), 10)
 
 		// Construct a PaymentEvent and add required details
 		paymentEvent := models.PaymentEvent{
-			PaymentID: string(cuttingEvent.CuttingResultID),
+			PaymentID: cuttingResultIDStr,
 			OrderID:   cuttingEvent.ItemID,
 			Email:     emailStore[fmt.Sprintf("%d", cuttingEvent.CuttingResultID)],
 			Amount:    100.0,
@@ -56,9 +60,9 @@ func (n *NotificationService) SubScribeAnsConsumeCuttingEvents() error {
 		)
 
 		if err != nil {
-			fmt.Printf("Error sending notification: %v\n", err)
+			log.Printf("Error sending notification: %v\n", err)
 		} else {
-			fmt.Println("Notification sent successfully!")
+			log.Println("Notification sent successfully!")
 		}
 	}
 }
