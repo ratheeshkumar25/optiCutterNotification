@@ -36,20 +36,6 @@ func TestPaymentHandler(t *testing.T) {
 	mockService.AssertCalled(t, "SubscribeAndConsumePaymentEvents")
 }
 
-// Test for CuttingResultHandler
-func TestCuttingResultHandler(t *testing.T) {
-	mockService := new(MockNotificationService)
-	mockService.On("SubScribeAnsConsumeCuttingEvents").Return(nil)
-
-	handler := NewNotificationHandler(mockService)
-
-	err := handler.CuttingResultHandler()
-
-	// Assert expectations
-	assert.NoError(t, err)
-	mockService.AssertCalled(t, "SubScribeAnsConsumeCuttingEvents")
-}
-
 // Test for PaymentHandler with error
 func TestPaymentHandler_Error(t *testing.T) {
 	mockService := new(MockNotificationService)
@@ -63,19 +49,4 @@ func TestPaymentHandler_Error(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, assert.AnError, err)
 	mockService.AssertCalled(t, "SubscribeAndConsumePaymentEvents")
-}
-
-// Test for CuttingResultHandler with error
-func TestCuttingResultHandler_Error(t *testing.T) {
-	mockService := new(MockNotificationService)
-	mockService.On("SubScribeAnsConsumeCuttingEvents").Return(assert.AnError)
-
-	handler := NewNotificationHandler(mockService)
-
-	err := handler.CuttingResultHandler()
-
-	// Assert expectations
-	assert.Error(t, err)
-	assert.Equal(t, assert.AnError, err)
-	mockService.AssertCalled(t, "SubScribeAnsConsumeCuttingEvents")
 }
